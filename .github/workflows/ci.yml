@@ -1,0 +1,83 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Tests (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['20.20.2', '24']
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm test
+
+  quality:
+    name: Build, package, and licensing
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+          cache: npm
+      - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          version: 0.11.21
+          enable-cache: false
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Build, typecheck, and format check
+        run: |
+          npm run build
+          npm run typecheck
+          npx prettier --check .
+      - name: Audit dependencies
+        run: npm audit
+      - name: Check REUSE licensing
+        run: uvx --from 'reuse[charset-normalizer]==6.2.0' reuse lint
+      - name: Build packed package
+        id: package
+        run: echo "tarball=$(npm pack --silent)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '20.6.1'
+      - name: Smoke test packed package on minimum Node
+        env:
+          TARBALL: ${{ steps.package.outputs.tarball }}
+        run: |
+          set -euo pipefail
+          prefix="$(mktemp -d)"
+          npm install --global --prefix "$prefix" "./$TARBALL"
+          test -x "$prefix/bin/forge-codex"
+          "$prefix/bin/forge-codex" --help
+          FORGE_CODEX_HOME="$prefix/state" \
+            CODEX_HOME="$prefix/codex" \
+            FORGE_TRACE_PROJECT="entity/project" \
+            WANDB_API_KEY="test" \
+            "$prefix/bin/forge-codex" status --json \
+            | node -e 'let s=""; process.stdin.on("data", c => s += c); process.stdin.on("end", () => { const x = JSON.parse(s); if (!x.ready || !x.apiKeyResolved) process.exit(1); });'

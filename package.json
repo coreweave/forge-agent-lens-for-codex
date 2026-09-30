@@ -1,0 +1,49 @@
+{
+  "name": "@coreweave/forge-codex",
+  "publishConfig": {
+    "access": "public"
+  },
+  "version": "0.1.0",
+  "description": "CoreWeave Forge observability for OpenAI Codex CLI rollout sessions.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coreweave/forge-codex.git"
+  },
+  "bin": {
+    "forge-codex": "dist/cli.js"
+  },
+  "files": [
+    "dist/",
+    "LICENSE",
+    "LICENSES/",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20.6"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json && node scripts/build/postbuild.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "prettier --check . && tsc -p tsconfig.json --noEmit",
+    "format": "prettier --write .",
+    "secrets:scan": "gitleaks dir . --no-banner --redact",
+    "secrets:scan:staged": "gitleaks git --pre-commit --staged --redact --verbose",
+    "check": "npm run build && npm run lint && npm test && npm run secrets:scan",
+    "setup-hooks": "node scripts/install-git-hooks.mjs",
+    "prepublishOnly": "npm run build"
+  },
+  "dependencies": {
+    "@coreweave/forge-sdk": "0.1.0-beta.0"
+  },
+  "devDependencies": {
+    "@opentelemetry/sdk-trace-base": "^2.10.0",
+    "@types/node": "^22",
+    "prettier": "^3.3",
+    "typescript": "^5.6",
+    "vitest": "^4.1.11"
+  }
+}

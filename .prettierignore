@@ -1,0 +1,12 @@
+dist/
+node_modules/
+coverage/
+.context/
+package-lock.json
+.cw/artifact-mgmt/config.yaml
+.github/renovate.json5
+.github/workflows/renovate.yaml
+catalog.yaml
+# The CoreWeave CLA signature lines are underscores. Prettier reads them as
+# Markdown emphasis and rewrites the form.
+CLA.md

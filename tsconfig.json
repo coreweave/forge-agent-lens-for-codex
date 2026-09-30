@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2023"],
+    "outDir": "dist",
+    "rootDir": "src",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "declaration": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src/**/*"],
+  // The default project type-checks everything under src/ — including the
+  // co-located *.test.ts files and shared fixtures — so editors and
+  // `npm run typecheck`/`lint` flag type errors in tests too. Emitting dist/
+  // uses tsconfig.build.json, which drops tests from the published output.
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+
+# Never commit real Codex session data or local secrets used while testing.
+*.local
+.forge-codex/
+fixtures-real/

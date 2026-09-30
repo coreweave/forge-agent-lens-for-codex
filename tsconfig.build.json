@@ -1,0 +1,7 @@
+{
+  // Emit config for the published package: same options as tsconfig.json, but
+  // excludes the co-located tests and shared fixtures so they never reach dist/.
+  // Type-checking (tsconfig.json) still covers them.
+  "extends": "./tsconfig.json",
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "src/test-support"]
+}
