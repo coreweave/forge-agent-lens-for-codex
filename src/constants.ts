@@ -13,7 +13,8 @@ import {join} from 'node:path';
 
 // --- Our own state lives under ~/.forge-agent-lens-for-codex (override for tests via env) ---
 export const FORGE_CODEX_HOME =
-  process.env.FORGE_CODEX_HOME ?? join(homedir(), '.forge-agent-lens-for-codex');
+  process.env.FORGE_CODEX_HOME ??
+  join(homedir(), '.forge-agent-lens-for-codex');
 export const SETTINGS_FILE = join(FORGE_CODEX_HOME, 'settings.json');
 export const LOG_FILE = join(FORGE_CODEX_HOME, 'logs', 'collector.log');
 
@@ -46,7 +47,9 @@ function readVersion(): string {
     readFileSync(new URL('../package.json', import.meta.url), 'utf8')
   ) as {version?: string};
   if (!version)
-    throw new Error('forge-agent-lens-for-codex: package.json is missing a "version" field');
+    throw new Error(
+      'forge-agent-lens-for-codex: package.json is missing a "version" field'
+    );
   return version;
 }
 export const VERSION = readVersion();

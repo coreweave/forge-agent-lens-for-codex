@@ -148,9 +148,12 @@ describe('runAndCollect', () => {
   });
 
   it('reports a spawn failure as exit 127', async () => {
-    const code = await runAndCollect(['forge-agent-lens-for-codex-no-such-binary-xyz'], {
-      config: {...CFG, apiKey: ''},
-    });
+    const code = await runAndCollect(
+      ['forge-agent-lens-for-codex-no-such-binary-xyz'],
+      {
+        config: {...CFG, apiKey: ''},
+      }
+    );
     expect(code).toBe(127);
   });
 

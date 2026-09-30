@@ -201,7 +201,10 @@ async function collectCommand(): Promise<void> {
   const err = configError(config);
   if (err) {
     if (json) console.log(JSON.stringify({ok: false, error: err}, null, 2));
-    else console.error(`forge-agent-lens-for-codex collect: not configured — ${err}`);
+    else
+      console.error(
+        `forge-agent-lens-for-codex collect: not configured — ${err}`
+      );
     process.exitCode = 1;
     return;
   }
@@ -243,7 +246,9 @@ async function runCommand(): Promise<void> {
   const {json, command, error} = splitRunArgs(process.argv.slice(3));
   if (error) {
     console.error(`forge-agent-lens-for-codex run: ${error}\n`);
-    console.error('usage: forge-agent-lens-for-codex run [--json] -- <command> [args...]');
+    console.error(
+      'usage: forge-agent-lens-for-codex run [--json] -- <command> [args...]'
+    );
     console.error(
       '  e.g. forge-agent-lens-for-codex run -- codex exec "fix the failing test"'
     );
