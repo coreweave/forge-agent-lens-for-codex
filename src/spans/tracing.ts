@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 CoreWeave, Inc.
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-PackageName: forge-codex
+// SPDX-PackageName: forge-agent-lens-for-codex
 
 import * as tracing from '@coreweave/forge-sdk/agentlens/tracing';
 
@@ -34,7 +34,7 @@ export function buildTracing(config: ResolvedConfig): TracingHandle {
         try {
           await tracing.init(config.projectId, {
             apiKey: config.apiKey,
-            serviceName: 'forge-codex',
+            serviceName: 'forge-agent-lens-for-codex',
           });
         } catch (error) {
           release?.();

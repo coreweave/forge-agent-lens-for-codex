@@ -2,10 +2,10 @@
 
 // SPDX-FileCopyrightText: 2026 CoreWeave, Inc.
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-PackageName: forge-codex
+// SPDX-PackageName: forge-agent-lens-for-codex
 
 /**
- * `forge-codex` CLI: install | uninstall | status.
+ * `forge-agent-lens-for-codex` CLI: install | uninstall | status.
  *
  * install wires a Stop-hook into ~/.codex/hooks.json that triggers the detached
  * collector. Credentials come from env / `wandb login` (netrc);
@@ -100,7 +100,7 @@ async function install(): Promise<void> {
   const baseline = await baselineExistingSessions();
   if (baseline.skippedFiles.length > 0) {
     console.error(
-      `forge-codex install: could not safely baseline ${baseline.skippedFiles.length} existing session(s); hook installation stopped`
+      `forge-agent-lens-for-codex install: could not safely baseline ${baseline.skippedFiles.length} existing session(s); hook installation stopped`
     );
     for (const failure of baseline.errors) {
       console.error(`  ${failure.file}: ${failure.message}`);
@@ -120,7 +120,7 @@ async function install(): Promise<void> {
   const config = await resolveConfig();
   const err = configError(config);
 
-  console.log(`forge-codex ${VERSION} installed`);
+  console.log(`forge-agent-lens-for-codex ${VERSION} installed`);
   console.log(`  shim:     ${shim}`);
   console.log(`  hooks:    ${CODEX_HOOKS_FILE}`);
   console.log(
@@ -144,7 +144,7 @@ async function install(): Promise<void> {
 
 async function uninstall(): Promise<void> {
   const removed = await removeHooks();
-  console.log(`forge-codex uninstalled`);
+  console.log(`forge-agent-lens-for-codex uninstalled`);
   console.log(`  removed hooks: ${formatList(removed)}`);
   console.log(
     `  settings left intact at ${SETTINGS_FILE} (delete manually to fully remove)`
@@ -163,7 +163,7 @@ async function status(): Promise<void> {
     return;
   }
 
-  console.log(`forge-codex ${VERSION}`);
+  console.log(`forge-agent-lens-for-codex ${VERSION}`);
   console.log(
     `  hook installed:  ${installed ? 'yes' : 'no'}  (${CODEX_HOOKS_FILE})`
   );
@@ -190,7 +190,7 @@ async function status(): Promise<void> {
 async function collectCommand(): Promise<void> {
   const {json, error} = parseCollectArgs(process.argv.slice(3));
   if (error) {
-    console.error(`forge-codex collect: ${error}\n`);
+    console.error(`forge-agent-lens-for-codex collect: ${error}\n`);
     printHelp();
     process.exitCode = 1;
     return;
@@ -201,7 +201,7 @@ async function collectCommand(): Promise<void> {
   const err = configError(config);
   if (err) {
     if (json) console.log(JSON.stringify({ok: false, error: err}, null, 2));
-    else console.error(`forge-codex collect: not configured — ${err}`);
+    else console.error(`forge-agent-lens-for-codex collect: not configured — ${err}`);
     process.exitCode = 1;
     return;
   }
@@ -227,7 +227,7 @@ async function collectCommand(): Promise<void> {
   }
 
   console.log(
-    `forge-codex collect — swept ${results.length} session(s), exported ${newTurns} new turn(s)`
+    `forge-agent-lens-for-codex collect — swept ${results.length} session(s), exported ${newTurns} new turn(s)`
   );
   for (const r of results) {
     console.log(
@@ -242,10 +242,10 @@ async function collectCommand(): Promise<void> {
 async function runCommand(): Promise<void> {
   const {json, command, error} = splitRunArgs(process.argv.slice(3));
   if (error) {
-    console.error(`forge-codex run: ${error}\n`);
-    console.error('usage: forge-codex run [--json] -- <command> [args...]');
+    console.error(`forge-agent-lens-for-codex run: ${error}\n`);
+    console.error('usage: forge-agent-lens-for-codex run [--json] -- <command> [args...]');
     console.error(
-      '  e.g. forge-codex run -- codex exec "fix the failing test"'
+      '  e.g. forge-agent-lens-for-codex run -- codex exec "fix the failing test"'
     );
     process.exitCode = 1;
     return;
@@ -257,17 +257,17 @@ async function runCommand(): Promise<void> {
 }
 
 function printHelp(): void {
-  console.log(`forge-codex ${VERSION} — CoreWeave Forge observability for OpenAI Codex CLI
+  console.log(`forge-agent-lens-for-codex ${VERSION} — CoreWeave Forge observability for OpenAI Codex CLI
 
 Usage:
-  forge-codex install         Wire the Stop hook into ~/.codex/hooks.json
-  forge-codex uninstall       Remove the forge-codex hook entries
-  forge-codex status [--json] Show resolved config and hook state
-  forge-codex collect --all [--json]
+  forge-agent-lens-for-codex install         Wire the Stop hook into ~/.codex/hooks.json
+  forge-agent-lens-for-codex uninstall       Remove the forge-agent-lens-for-codex hook entries
+  forge-agent-lens-for-codex status [--json] Show resolved config and hook state
+  forge-agent-lens-for-codex collect --all [--json]
                               Reconstruct + export all rollout sessions (hook-free;
                               for headless codex exec / CI). A cursor-less rollout
                               starts at offset 0 and can send pre-install history.
-  forge-codex run [--json] -- <cmd...>
+  forge-agent-lens-for-codex run [--json] -- <cmd...>
                               Run <cmd> (e.g. codex exec …), then auto-export on exit
 
 Config (adapter options: env > settings.json > default; API key: env > netrc):

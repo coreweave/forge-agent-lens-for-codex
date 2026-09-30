@@ -2,7 +2,7 @@
 
 // SPDX-FileCopyrightText: 2026 CoreWeave, Inc.
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-PackageName: forge-codex
+// SPDX-PackageName: forge-agent-lens-for-codex
 
 /**
  * The detached worker. Invoked by the Stop-hook shim as:

@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 CoreWeave, Inc.
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-PackageName: forge-codex
+// SPDX-PackageName: forge-agent-lens-for-codex
 
 import * as tracing from '@coreweave/forge-sdk/agentlens/tracing';
 import {
@@ -52,7 +52,7 @@ describe('emitTurn', () => {
     exporter = new InMemorySpanExporter();
     await tracing.init('ent/proj', {
       spanProcessor: new SimpleSpanProcessor(exporter),
-      serviceName: 'forge-codex',
+      serviceName: 'forge-agent-lens-for-codex',
     });
     await emitTurn(turnFromFixture(), true, DEFAULT_PROVIDER_NAME);
     spans = exporter.getFinishedSpans();
@@ -80,7 +80,7 @@ describe('emitTurn', () => {
     for (const span of spans) {
       expect(span.attributes).toMatchObject({
         'gen_ai.conversation.id': FIXTURE_SESSION_ID,
-        'forge.integration.name': 'forge-codex',
+        'forge.integration.name': 'forge-agent-lens-for-codex',
         'forge.integration.version': VERSION,
         'forge.integration.codex.cli_version': '0.50.0',
         'codex.session.id': FIXTURE_SESSION_ID,
@@ -222,7 +222,7 @@ describe('emitTurn', () => {
         maxExportBatchSize: 64,
         scheduledDelayMillis: 60_000,
       }),
-      serviceName: 'forge-codex',
+      serviceName: 'forge-agent-lens-for-codex',
     });
     const turn = turnFromFixture();
     turn.chats = Array.from({length: 300}, () => ({...turn.chats[0]!}));

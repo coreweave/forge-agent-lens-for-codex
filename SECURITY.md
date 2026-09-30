@@ -5,14 +5,14 @@
 Please **do not** open a public GitHub issue for security vulnerabilities.
 
 Report them privately through GitHub's
-[private vulnerability reporting](https://github.com/coreweave/forge-codex/security/advisories/new):
+[private vulnerability reporting](https://github.com/coreweave/forge-agent-lens-for-codex/security/advisories/new):
 on this repository, go to the **Security** tab → **Report a vulnerability**.
 
 When reporting, please include as much of the following as you can:
 
 - A description of the issue and its impact
 - Steps to reproduce, or a proof of concept
-- Affected version(s) of `forge-codex`
+- Affected version(s) of `forge-agent-lens-for-codex`
 - Any suggested remediation
 
 We will acknowledge your report, keep you updated on our progress, and
@@ -26,6 +26,6 @@ upgrade to the latest release before reporting.
 
 ## Scope
 
-`forge-codex` runs locally and sends Agent Lens trace data through Forge SDK to
+`forge-agent-lens-for-codex` runs locally and sends Agent Lens trace data through Forge SDK to
 the W&B instance you configure. It does not bundle a server component. Reports
 about credentials, session data, or captured trace content are in scope.

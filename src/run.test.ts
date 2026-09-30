@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 CoreWeave, Inc.
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-PackageName: forge-codex
+// SPDX-PackageName: forge-agent-lens-for-codex
 
 import {randomUUID} from 'node:crypto';
 import {mkdir, mkdtemp, writeFile} from 'node:fs/promises';
@@ -34,7 +34,7 @@ function inMemory() {
       init: () =>
         tracing.init(config.projectId, {
           apiKey: config.apiKey,
-          serviceName: 'forge-codex',
+          serviceName: 'forge-agent-lens-for-codex',
           spanProcessor: new SimpleSpanProcessor(exporter),
         }),
       forceFlush: tracing.forceFlush,
@@ -148,7 +148,7 @@ describe('runAndCollect', () => {
   });
 
   it('reports a spawn failure as exit 127', async () => {
-    const code = await runAndCollect(['forge-codex-no-such-binary-xyz'], {
+    const code = await runAndCollect(['forge-agent-lens-for-codex-no-such-binary-xyz'], {
       config: {...CFG, apiKey: ''},
     });
     expect(code).toBe(127);

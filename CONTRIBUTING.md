@@ -1,4 +1,4 @@
-# Contributing to forge-codex
+# Contributing to forge-agent-lens-for-codex
 
 ## Local checks
 

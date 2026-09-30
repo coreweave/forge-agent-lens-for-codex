@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2026 CoreWeave, Inc.
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-PackageName: forge-codex
+// SPDX-PackageName: forge-agent-lens-for-codex
 
 /**
- * The machine-readable `forge-codex status` report.
+ * The machine-readable `forge-agent-lens-for-codex status` report.
  *
  * Kept separate from the CLI's argv/console plumbing so its shape can be
  * unit-tested without invoking the entry point, and so the `--json` output and

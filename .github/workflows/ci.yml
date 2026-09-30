@@ -73,11 +73,11 @@ jobs:
           set -euo pipefail
           prefix="$(mktemp -d)"
           npm install --global --prefix "$prefix" "./$TARBALL"
-          test -x "$prefix/bin/forge-codex"
-          "$prefix/bin/forge-codex" --help
+          test -x "$prefix/bin/forge-agent-lens-for-codex"
+          "$prefix/bin/forge-agent-lens-for-codex" --help
           FORGE_CODEX_HOME="$prefix/state" \
             CODEX_HOME="$prefix/codex" \
             FORGE_TRACE_PROJECT="entity/project" \
             WANDB_API_KEY="test" \
-            "$prefix/bin/forge-codex" status --json \
+            "$prefix/bin/forge-agent-lens-for-codex" status --json \
             | node -e 'let s=""; process.stdin.on("data", c => s += c); process.stdin.on("end", () => { const x = JSON.parse(s); if (!x.ready || !x.apiKeyResolved) process.exit(1); });'

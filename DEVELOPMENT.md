@@ -57,10 +57,10 @@ npm run build
 tarball=$(npm pack --silent)
 prefix=$(mktemp -d)
 npm install --global --prefix "$prefix" "./$tarball"
-"$prefix/bin/forge-codex" --help
+"$prefix/bin/forge-agent-lens-for-codex" --help
 FORGE_CODEX_HOME="$prefix/state" CODEX_HOME="$prefix/codex" \
   FORGE_TRACE_PROJECT="entity/project" WANDB_API_KEY="test" \
-  "$prefix/bin/forge-codex" status --json
+  "$prefix/bin/forge-agent-lens-for-codex" status --json
 ```
 
 ## Manual Agent Lens smoke

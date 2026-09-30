@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2026 CoreWeave, Inc.
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-PackageName: forge-codex
+// SPDX-PackageName: forge-agent-lens-for-codex
 
 /**
- * `forge-codex run -- <command...>`: run a command (e.g. `codex exec ...`) to
+ * `forge-agent-lens-for-codex run -- <command...>`: run a command (e.g. `codex exec ...`) to
  * completion, then sweep rollouts and export — the automatic flush for headless
  * `codex exec`/CI, where Codex's Stop hook may not fire and there is no upstream
  * session-exit hook to trigger us. Idempotent via the per-session cursor, so it
@@ -73,12 +73,12 @@ export async function runAndCollect(
     );
     for (const failure of baseline.errors) {
       process.stderr.write(
-        `forge-codex run: could not baseline ${failure.file}: ${failure.message}\n`
+        `forge-agent-lens-for-codex run: could not baseline ${failure.file}: ${failure.message}\n`
       );
     }
   } catch (err) {
     process.stderr.write(
-      `forge-codex run: baseline failed; tracing flush disabled (${message(err)})\n`
+      `forge-agent-lens-for-codex run: baseline failed; tracing flush disabled (${message(err)})\n`
     );
   }
   const spawnChild = opts.spawnChild ?? defaultSpawn;
@@ -87,7 +87,7 @@ export async function runAndCollect(
   const err = configError(opts.config);
   if (err) {
     process.stderr.write(
-      `forge-codex run: skipping flush — not configured (${err})\n`
+      `forge-agent-lens-for-codex run: skipping flush — not configured (${err})\n`
     );
     return code;
   }
@@ -102,7 +102,7 @@ export async function runAndCollect(
     });
   } catch (err) {
     process.stderr.write(
-      `forge-codex run: tracing flush failed (${message(err)})\n`
+      `forge-agent-lens-for-codex run: tracing flush failed (${message(err)})\n`
     );
     return code;
   }
@@ -117,7 +117,7 @@ function defaultSpawn(command: string[]): Promise<number> {
     const child = spawn(command[0]!, command.slice(1), {stdio: 'inherit'});
     child.on('error', err => {
       process.stderr.write(
-        `forge-codex run: could not start ${command[0]}: ${err.message}\n`
+        `forge-agent-lens-for-codex run: could not start ${command[0]}: ${err.message}\n`
       );
       resolve(SPAWN_FAILURE_EXIT);
     });
@@ -142,7 +142,7 @@ function formatReport(
   }
   const newTurns = results.reduce((n, r) => n + r.turns.length, 0);
   const failures = results.filter(result => result.error).length;
-  return `forge-codex: exported ${newTurns} new turn(s) across ${results.length} session(s)${failures ? `; ${failures} failed` : ''}`;
+  return `forge-agent-lens-for-codex: exported ${newTurns} new turn(s) across ${results.length} session(s)${failures ? `; ${failures} failed` : ''}`;
 }
 
 function message(err: unknown): string {

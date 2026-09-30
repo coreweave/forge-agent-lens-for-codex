@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 CoreWeave, Inc.
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-PackageName: forge-codex
+// SPDX-PackageName: forge-agent-lens-for-codex
 
 import * as tracing from '@coreweave/forge-sdk/agentlens/tracing';
 import type {
@@ -20,7 +20,7 @@ import {CODEX, INTEGRATION, MCP} from '../semconv.js';
 import {chatOutputMessages, finalMessages} from './messages.js';
 
 const AGENT_NAME = 'codex';
-const INTEGRATION_NAME = 'forge-codex';
+const INTEGRATION_NAME = 'forge-agent-lens-for-codex';
 const MAX_CONTENT_BYTES = 128 * 1024;
 const TRUNCATION_MARKER = '…[truncated]';
 /** Keep the SDK batch queue bounded even for one unusually large turn. */
