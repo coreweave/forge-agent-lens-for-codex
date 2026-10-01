@@ -1,5 +1,5 @@
 {
-  "name": "@coreweave/forge-codex",
+  "name": "@coreweave/forge-agent-lens-for-codex",
   "publishConfig": {
     "access": "public"
   },
@@ -9,10 +9,10 @@
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/coreweave/forge-codex.git"
+    "url": "git+https://github.com/coreweave/forge-agent-lens-for-codex.git"
   },
   "bin": {
-    "forge-codex": "dist/cli.js"
+    "forge-agent-lens-for-codex": "dist/cli.js"
   },
   "files": [
     "dist/",

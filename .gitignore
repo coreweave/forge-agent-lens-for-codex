@@ -6,5 +6,5 @@ coverage/
 
 # Never commit real Codex session data or local secrets used while testing.
 *.local
-.forge-codex/
+.forge-agent-lens-for-codex/
 fixtures-real/

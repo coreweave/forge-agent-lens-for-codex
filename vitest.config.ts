@@ -1,6 +1,6 @@
 // SPDX-FileCopyrightText: 2026 CoreWeave, Inc.
 // SPDX-License-Identifier: Apache-2.0
-// SPDX-PackageName: forge-codex
+// SPDX-PackageName: forge-agent-lens-for-codex
 
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
@@ -8,8 +8,8 @@ import {join} from 'node:path';
 import {defineConfig} from 'vitest/config';
 
 // Tests point at throwaway temp dirs so install/cursor tests never touch the
-// real ~/.codex or ~/.forge-codex. constants.ts reads these at load.
-const TEST_ROOT = join(tmpdir(), 'forge-codex-tests');
+// real ~/.codex or ~/.forge-agent-lens-for-codex. constants.ts reads these at load.
+const TEST_ROOT = join(tmpdir(), 'forge-agent-lens-for-codex-tests');
 
 export default defineConfig({
   plugins: [
