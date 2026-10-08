@@ -33,6 +33,20 @@ jobs:
       - run: npm ci
       - run: npm test
 
+  secrets:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: trufflesecurity/trufflehog@4dd8831c5f12599465d4d45c3c447b4018a34c85 # v3.97.9
+        with:
+          path: ./
+          extra_args: --only-verified
+
   quality:
     name: Build, package, and licensing
     runs-on: ubuntu-latest
@@ -60,6 +74,8 @@ jobs:
         run: npm audit
       - name: Check REUSE licensing
         run: uvx --from 'reuse[charset-normalizer]==6.2.0' reuse lint
+      - name: Audit workflows
+        run: uvx --from zizmor==1.30.1 zizmor --pedantic .
       - name: Build packed package
         id: package
         run: echo "tarball=$(npm pack --silent)" >> "$GITHUB_OUTPUT"
@@ -69,7 +85,8 @@ jobs:
       - name: Smoke test packed package on minimum Node
         env:
           TARBALL: ${{ steps.package.outputs.tarball }}
-        run: |
+        run:
+          | # zizmor: ignore[adhoc-packages] -- installs the packed tarball the way a user would, outside the lockfile
           set -euo pipefail
           prefix="$(mktemp -d)"
           npm install --global --prefix "$prefix" "./$TARBALL"

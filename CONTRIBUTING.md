@@ -14,15 +14,41 @@ npm run check
 Before opening a pull request, also run:
 
 ```shell
-npx prettier --check .
 uvx --from 'reuse[charset-normalizer]==6.2.0' reuse lint
+uvx --from zizmor==1.30.1 zizmor --pedantic .
 ```
+
+## Test a change in Codex
+
+Install your checkout globally and register the hook from it. `install` points
+the hook at this checkout's `dist/`, so rebuild after each change:
+
+```shell
+npm run build
+npm install --global .
+forge-agent-lens-for-codex install
+```
+
+See [DEVELOPMENT.md](./DEVELOPMENT.md) for the packed-tarball smoke test and
+the manual Agent Lens smoke procedure.
 
 ## Pull requests
 
-Use a Conventional Commit title. Call out privacy or compatibility changes in
+Use Conventional Commit titles, such as `fix: retry failed SDK flushes`, for
+pull requests and commits. release-please writes the changelog from them, so
+don't edit `CHANGELOG.md` by hand. Call out privacy or compatibility changes in
 the pull request description, and update the README when user-visible behavior
 changes. Do not commit generated build artifacts or local configuration.
+
+## Releases
+
+release-please keeps a release PR open with the next version and changelog.
+Merging it tags `vX.Y.Z` and runs the release workflow, which reruns the
+checks, smoke-tests the packed tarball on the minimum Node.js version, and
+publishes it to npm and the GitHub release. To choose the version, add a
+`Release-As: X.Y.Z` footer to a commit.
+
+Never reuse or move an existing release tag.
 
 ## Contributor License Agreement
 

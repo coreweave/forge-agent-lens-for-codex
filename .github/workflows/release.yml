@@ -1,9 +1,9 @@
 name: Release
 
+# Release Please dispatches this on each release tag:
+# gh workflow run release.yml --ref vX.Y.Z
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,12 +13,10 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  release:
-    name: Build GitHub release
+  build:
+    name: Verify and build the package
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -27,20 +25,25 @@ jobs:
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '24'
-          cache: npm
+          package-manager-cache: false
       - uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
         with:
           version: 0.11.21
           enable-cache: false
       - name: Install locked dependencies
         run: npm ci
-      - name: Verify tag and package version
+      - name: Verify tag, package, and changelog versions
         env:
           RELEASE_TAG: ${{ github.ref_name }}
         run: |
           set -euo pipefail
+          if [ "$GITHUB_REF_TYPE" != "tag" ]; then
+            echo "::error::Run this workflow from a release tag, not $GITHUB_REF_TYPE $RELEASE_TAG"
+            exit 1
+          fi
           package_version="$(node -p 'require("./package.json").version')"
           test "$RELEASE_TAG" = "v$package_version"
+          grep -E "^## \[?${package_version}\]?[ (]" CHANGELOG.md
           git merge-base --is-ancestor "$GITHUB_SHA" refs/remotes/origin/main
       - name: Run release checks
         run: |
@@ -53,16 +56,19 @@ jobs:
       - name: Build package tarball
         id: package
         run: |
-          tarball="$(npm pack --silent)"
-          echo "$tarball" > release-tarball.txt
-          echo "tarball=$tarball" >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+          mkdir -p release
+          tarball="$(npm pack --silent --pack-destination release)"
+          echo "tarball=release/$tarball" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: '20.6.1'
+          package-manager-cache: false
       - name: Smoke test packed package on minimum Node
         env:
           TARBALL: ${{ steps.package.outputs.tarball }}
-        run: |
+        run:
+          | # zizmor: ignore[adhoc-packages] -- installs the packed tarball the way a user would, outside the lockfile
           set -euo pipefail
           prefix="$(mktemp -d)"
           npm install --global --prefix "$prefix" "./$TARBALL"
@@ -74,13 +80,51 @@ jobs:
             WANDB_API_KEY="test" \
             "$prefix/bin/forge-agent-lens-for-codex" status --json \
             | node -e 'let s=""; process.stdin.on("data", c => s += c); process.stdin.on("end", () => { const x = JSON.parse(s); if (!x.ready || !x.apiKeyResolved) process.exit(1); });'
-      - name: Create GitHub release
+      - name: Write checksums
+        working-directory: release
+        run: sha256sum ./*.tgz > SHA256SUMS
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: release
+          path: release/
+          if-no-files-found: error
+
+  publish-npm:
+    name: Publish to npm
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      id-token: write # Required for npm trusted publishing.
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: release
+          path: release
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '24'
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      # Publish the tarball the build job smoke-tested, not a rebuild.
+      - name: Publish to npm
+        run: npm publish release/*.tgz --access public --provenance
+
+  github-release:
+    name: Attach the package to the GitHub release
+    needs: publish-npm
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write # Required to upload assets to the GitHub release.
+    steps:
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: release
+          path: release
+      - name: Upload the tarball and checksums
         env:
           GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
           RELEASE_TAG: ${{ github.ref_name }}
-        run: |
-          tarball="$(cat release-tarball.txt)"
-          gh release create "$RELEASE_TAG" "$tarball" \
-            --generate-notes \
-            --title "forge-agent-lens-for-codex $RELEASE_TAG" \
-            --verify-tag
+        run: gh release upload "$RELEASE_TAG" release/*
