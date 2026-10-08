@@ -18,7 +18,6 @@
     "dist/",
     "LICENSE",
     "LICENSES/",
-    "NOTICE",
     "README.md"
   ],
   "engines": {
