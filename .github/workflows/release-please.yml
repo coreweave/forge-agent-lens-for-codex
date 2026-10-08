@@ -1,0 +1,49 @@
+name: Release Please
+
+# Keeps the release PR current. Merging it tags vX.Y.Z, creates the GitHub
+# release, and dispatches Release on that tag.
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-please
+  cancel-in-progress: false
+
+jobs:
+  release-please:
+    name: Update the release PR or release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # Required for release commits, tags, and GitHub releases.
+      issues: write # Required to create the labels that track the release PR.
+      pull-requests: write # Required to open and update the release PR.
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - name: Run release-please
+        id: release
+        uses: googleapis/release-please-action@45996ed1f6d02564a971a2fa1b5860e934307cf7 # v5.0.0
+
+  # Tags created with GITHUB_TOKEN don't trigger workflows, so dispatch Release
+  # instead. npm trusts release.yml, so publishing stays there.
+  publish:
+    name: Dispatch Release on the new tag
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write # Required to dispatch release.yml.
+    steps:
+      - name: Dispatch Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ needs.release-please.outputs.tag_name }}
+        run: gh workflow run release.yml --repo "$GITHUB_REPOSITORY" --ref "$TAG_NAME"
