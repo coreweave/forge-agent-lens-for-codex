@@ -42,13 +42,10 @@ changes. Do not commit generated build artifacts or local configuration.
 
 ## Releases
 
-release-please keeps a release PR open that bumps the version in
-`package.json` and `package-lock.json` and updates the changelog from the
-Conventional Commits on `main`. Merging the PR tags `vX.Y.Z`, creates the
-GitHub release, and runs the release workflow. That workflow reruns the checks,
-smoke-tests the packed tarball on the minimum Node.js version, publishes it to
-npm through trusted publishing with provenance, and attaches it to the GitHub
-release with SHA-256 checksums. To choose the version, add a
+release-please keeps a release PR open with the next version and changelog.
+Merging it tags `vX.Y.Z` and runs the release workflow, which reruns the
+checks, smoke-tests the packed tarball on the minimum Node.js version, and
+publishes it to npm and the GitHub release. To choose the version, add a
 `Release-As: X.Y.Z` footer to a commit.
 
 Never reuse or move an existing release tag.

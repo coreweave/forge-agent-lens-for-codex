@@ -69,10 +69,9 @@ development or test environments.
 
 ### Content capture
 
-Set `FORGE_CODEX_INCLUDE_CONTENT=false` to keep structural spans, model names,
-token usage, timing, tool names, call IDs, and MCP server names while omitting
-prompts, assistant output, reasoning, tool arguments, tool results, and the
-working directory. This package does not perform PII scrubbing or semantic
+Set `FORGE_CODEX_INCLUDE_CONTENT=false` to omit the content listed above.
+Spans keep model names, token usage, timing, tool names, call IDs, and MCP
+server names. This package does not perform PII scrubbing or semantic
 redaction.
 
 For interactive Stop-hook collection, set `include_content` to `false` in
@@ -101,7 +100,7 @@ cursor doesn't advance and the turn is retried at the next Stop.
 ### Limitations
 
 - `codex mcp`, direct app-server/API sessions, aborted turns without a Stop
-  event, Windows, and `codex --ephemeral` are not supported.
+  event, and Windows are not supported.
 - Subagent operations appear as tool spans. Their separate rollout files are
   not reconstructed as nested traces.
 
@@ -162,9 +161,7 @@ npm ci
 npm run check
 ```
 
-See [DEVELOPMENT.md][development] for the architecture, the package smoke test,
-and the manual Agent Lens smoke procedure, and [CONTRIBUTING.md][contributing]
-for the full set of checks.
+See [DEVELOPMENT.md][development] for the architecture and smoke tests.
 
 ## Contributing
 
