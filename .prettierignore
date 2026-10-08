@@ -3,8 +3,9 @@ node_modules/
 coverage/
 .context/
 package-lock.json
-# release-please writes the changelog in its own Markdown style.
+# release-please writes these in its own style on every release PR.
 CHANGELOG.md
+.release-please-manifest.json
 # The CoreWeave CLA signature lines are underscores. Prettier reads them as
 # Markdown emphasis and rewrites the form.
 CLA.md
