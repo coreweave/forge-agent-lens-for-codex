@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.1](https://github.com/coreweave/forge-agent-lens-for-codex/compare/v0.1.0...v0.1.1) (2026-10-09)
+
+
+### Bug Fixes
+
+* **release:** publish the tarball by path ([a87f70b](https://github.com/coreweave/forge-agent-lens-for-codex/commit/a87f70b1806acdba2962c159ff8d24f6832ba6c7))
+* **release:** publish the tarball by path ([0de869c](https://github.com/coreweave/forge-agent-lens-for-codex/commit/0de869c3eb37090fd7e630fc6fc151bd5b3f42c2))
+
 ## 0.1.0 (2026-10-09)
 
 
