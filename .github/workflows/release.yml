@@ -108,7 +108,7 @@ jobs:
           package-manager-cache: false
       # Publish the tarball the build job smoke-tested, not a rebuild.
       - name: Publish to npm
-        run: npm publish release/*.tgz --access public --provenance
+        run: npm publish ./release/*.tgz --access public --provenance
 
   github-release:
     name: Attach the package to the GitHub release
