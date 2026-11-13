@@ -17,7 +17,7 @@ concurrency:
 jobs:
   release-please:
     name: Update the release PR or release
-    runs-on: ubuntu-latest
+    runs-on: cw-static-pub-x64-4c
     timeout-minutes: 10
     permissions:
       contents: write # Required for release commits, tags, and GitHub releases.
@@ -37,7 +37,7 @@ jobs:
     name: Dispatch Release on the new tag
     needs: release-please
     if: needs.release-please.outputs.release_created == 'true'
-    runs-on: ubuntu-latest
+    runs-on: cw-static-pub-x64-4c
     timeout-minutes: 5
     permissions:
       actions: write # Required to dispatch release.yml.

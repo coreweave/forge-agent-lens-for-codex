@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build:
     name: Verify and build the package
-    runs-on: ubuntu-latest
+    runs-on: cw-static-pub-x64-4c
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -92,7 +92,7 @@ jobs:
   publish-npm:
     name: Publish to npm
     needs: build
-    runs-on: ubuntu-latest
+    runs-on: cw-static-pub-x64-4c
     timeout-minutes: 10
     permissions:
       id-token: write # Required for npm trusted publishing.
@@ -113,7 +113,7 @@ jobs:
   github-release:
     name: Attach the package to the GitHub release
     needs: publish-npm
-    runs-on: ubuntu-latest
+    runs-on: cw-static-pub-x64-4c
     timeout-minutes: 5
     permissions:
       contents: write # Required to upload assets to the GitHub release.
